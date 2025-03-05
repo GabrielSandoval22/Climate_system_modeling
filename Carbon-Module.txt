@@ -1,0 +1,378 @@
+THE EN-ROADS CARBON CYCLE MODULE
+
+https://vensim.com/faq/
+
+<< STATES 
+________________________________________________________________________________
+
+  C   : carbon in the atmosphere  [ G ton Carbon ]  (not CO2) 
+  Cm  : carbon in the mixed layer [ G ton Carbon ]  (not CO2) 
+  Co  : carbon in the deep ocean  [ G ton Carbon ]  (not CO2) 
+
+  CH4 : Methane in Atmosphere  [ Mton CH4 ] (not C)
+
+  N2O : Nitrous Oxide in Atmosphere  [ Mtons ]
+
+  ODS : Other greenhouse gasses in atmosphere (lumped)
+
+  PFC : Per Fluoro Carbon in atmosphere
+
+  HFC : H  Fluoro Carbon in atmosphere
+
+  SF6 : S  Fluoro in atmosphere
+
+  Cumulative HFC emissions
+  Cumulative PFC emissions
+  Cumulative SF6 emissions
+  
+>>
+
+<< INPUTS 
+________________________________________________________________________________
+
+Target accelerated retirement rate electric	 percent/Year
+This reflects the results of government and/or corporate efforts to phase out the source units faster than they would naturally retire. Likely due to government policy and/or citizen pressures.
+
+Initial values:
+ ECoal: 0,  EOil: 0,  EGas: 0,  EBio: 0,  nuclear: 0,  Renewable: 0,  new: 0,  hydro: 0
+
+Accelerated retirement start year electric:
+ ECoal: 2025,  EOil: 2025,  EGas: 2025,  EBio: 2025,  nuclear: 2025,  Renewable: 2025,  new: 2025,  hydro: 2025,
+
+>>
+
+<< OUTPUTS 
+________________________________________________________________________________
+
+Ts : temparature change since 1850 of surface water and atmosphere [ deg C ]
+
+>>
+
+<< CONSTANTS 
+________________________________________________________________________________
+
+ppb CH4 per Mton CH4 [ ppb/Mton ]
+ppb CH4 per Mton CH4 = ppt per mol / CH4 molar mass * g per ton * tons per Mton / ppt per ppb
+
+MtonsC per GtonC : Converts MtonsC to GtonsC.  [ MtonsC/GtonsC ]
+MtonsC per GtonC = 1000
+
+CO2 per C = 3.66  [ GtonsCO2 / GtonsC ] 
+CH4 per C = 1.33  [ GtonsCO2 / GtonsC ] 
+
+Initial C in Mixed Ocean : Initial carbon in mixed ocean layer.  [ GtonsC ]
+Initial C in Mixed Ocean = 1044.4
+
+C_ocean_init = [ 3114.46 ; 3099.9 ; 13361.1 ; 18483 ] ; Carbon in each ocean layer  [ GtonC ] 
+
+Preind C in Mixed Layer : Initial carbon concentration of mixed ocean layer.  [ GtonsC ]
+Preind C in Mixed Layer = Preind Ocean C per meter * Mixed Depth 
+
+Preind Ocean C per meter : Corresponds with 767.8 GtC in a 75m layer.  [ GtonsC / meter ]
+Preind Ocean C per meter = 10.2373;
+
+Sensitivity of pCO2 DIC to Temperature ( 1/DegreesC )
+Sensitivity of pCO2 of dissolved inorganic carbon in ocean to temperature.
+
+Sensitivity of pCO2 DIC to Temperature = Sensitivity of C Uptake to Temperature * Sensitivity of pCO2 DIC to Temperature Mean / "100 percent"
+
+Sensitivity of C Uptake to Temperature : (dimensionless)
+Allows users to control the strength of the feedback effect of temperature on uptake of C by land and oceans.
+0 means no temperature-carbon uptake feedback and default of 1 yields the average value found in Friedlingstein et al., 2006.
+Climate-Carbon Cycle Feedback Analysis: Results from the C4MIP Model Intercomparison. Journal of Climate. p3337-3353.
+Sensitivity of C Uptake to Temperature = 1
+
+Sensitivity of pCO2 DIC to Temperature Mean [ percent/DegreesC ]
+Sensitivity of equilibrium concentration of dissolved inorganic carbon to temperature.
+Calibrated to be consistent with Friedlingstein et al., 2006.
+Climate-Carbon Cycle Feedback Analysis: Results from the C4MIP Model Intercomparison.
+Journal of Climate. p3337-3353.
+Default Sensitivity of C Uptake to Temperature of 1 corresponds to mean value from the 11 models tested.
+Sensitivity of pCO2 DIC to Temperature Mean = 0.3
+
+Preindustrial C [ GtonsC ]
+Calculated from preindustrial concentration of 277 ppm divided by 0.4695 ppm CO2 per GtonsC.
+Atmospheric CO2 record based on ice core data before 1958 (Ethridge et. al., 1996; MacFarling Meure et al., 2006)
+Preindustrial C = 590
+
+Flux Ocean C to CH4 as CH4 [ Mtons/Year ]
+Weber, T., Wiseman, N.A. & Kock, A.
+Global ocean methane emissions dominated by shallow coastal waters. Nat Commun 10, 4584 (2019).
+https://doi.org/10.1038/s41467-019-12541-7. The Global Methane Budget 2000-2017.
+Saunous et al. 2020.
+https://essd.copernicus.org/articles/12/1561/2020/. Proxy for ocean and freshwater emissions.
+Flux Ocean C to CH4 as CH4 = 30
+
+Time Const for CH4 [ years ]
+IPCC AR6. WG1. Table 6.2
+Methane lifetime due to chemical losses, soil uptake and total atmospheric lifetime based on CMIP6 multi-model analysis,
+and bottom-up and top-down methane budget estimates in Table 5.2.
+https://www.ipcc.ch/report/ar6/wg1/chapter/chapter-6/
+Time Const for CH4 = 10.3
+
+Initial CH4 in atm [ Mtons ]
+Initial CH4 in atm = Initial CH4 conc / ppb CH4 per Mton CH4
+
+Initial CH4 conc : Based on 1990 levels from GISS, 2020.  [ ppb ]
+Initial CH4 conc = 1714
+
+
+Initial N2O in atm [ Mtons ]
+Initial N2O in atm = Initial N2O conc / ppb N2O per MTonN
+
+Initial N2O conc : Based on 1990 levels from GISS, 2020.  [ ppb ]
+Initial N2O conc = 308.725
+
+ppb N2O per MTonN [ ppb/Mton ]
+ppb N2O per MTonN = ppt per mol / "N2O-N molar mass" * g per ton * tons per Mton / ppt per ppb
+
+
+Natural N2O emissions : AR6 WG1 Chapter 5. Table 5.3 Global N2O budget [ TgN / yr ] [ Mton/Year ]
+averaged over the 1980s, 1990s, 2000s as well as the recent decade starting in 2007.
+Natural N2O emissions = 11.2
+
+>>
+
+<< STATIC  RELATIONSHIPS  (ALGEBRAIC EQUATIONS) 
+________________________________________________________________________________
+
+<< C
+
+C from CH4 oxidation : Flux of C into the atmosphere from the oxidation of CH4, the mode of removal of CH4 from atmosphere.
+C from CH4 oxidation = CH4 Uptake / CH4 per C / MtonsC per GtonC
+
+CH4 Uptake  = CH4 in Atm / Time Const for CH4   [ Mton / Year ]
+
+C loss from storage from non land CDR  (Carbon Dioxide Removal) 
+Total flow of carbon from geological or other nonLULUCF storage.  (Land Use, Land Use Change, Forrestry)
+
+C loss from storage from non land CDR = Total loss of C from storage from nonLULUCF CDR + Total C leakage from CCS (Carbon Capture & Storage)
+
+Flux C Biomass to Atmosphere u[Land use] = LULUCF biomass emissions u[Land use] + C from Biomass respiration u[Land use]
+
+Flux C Soil to Atmosphere  = SUM( Flux C Soil to Atmosphere u[Land use] )
+
+Flux C to atm from structure decay  = SUM( Flux C to atm from industrial wood decay u[Land use] )
+
+Global C energy and industry emissions  =
+
+( Global CO2 energy and industry emissions - Indirect CO2 in CH4 accounting ) / CO2 per C
+
+
+Global CO2 energy and industry emissions  = 
+IF THEN ELSE( SWITCH SCC = 1, CO2 emissions excluding all LULUCF + 
+
+			Excludes all CO2 emissions from land including those from bioenergy.
+
+			CO2 emissions excluding all LULUCF  =
+			SUM( CO2 emissions by emissions source excluding bioenergy[GHG sources] )
+
+	<<  Indirect CO2 in CH4 accounting
+
+	Indirect CO2 emissions included in accounting data that occurs due to oxidation of CH4;
+	in this model the indirect emissions are explicit from the methane cycle,
+	and therefore are deducted from the CO2 accounting to correct the data.
+	Also includes emissions for which CH4 represents recently-extracted biomass
+	(e.g. enteric fermentation). 
+
+	Indirect CO2 in CH4 accounting  = 
+			( 
+			 CH4 emissions by emissions source[Energy production]
+			 + 
+			 CH4 emissions by emissions source[End use capital]
+			 + 
+			 CH4 emissions by emissions source[Waste]
+			) / CH4 per C / MtonsC per GtonC * CO2 per C * 
+			Fraction of anthro CH4 emissions included in indirect CO2 accounts
+
+	>>
+
+
+C removal by non land CDR : Sequestration via nonLULUCF CDR.  [  GtonsC / Year ]
+C removal by non land CDR = SUM( C removal by nonAF CDR[Sequestration type] )
+
+
+C removal by nonAF CDR : 
+Annual removal, in Gton carbon for each of the sequestration types using either
+a simple time delay or specific detail structure, with limit based on C in atmosphere.
+
+C removal by nonAF CDR[NonAF CDR]  =
+MIN( C Removal Rate for nonAF CDR[Sequestration type] , C in Atmosphere / ELMCOUNT( NonAF CDR )
+	/ Minimum time for C cycle changes )
+
+
+C Flux Atm to Ocean : Carbon flux from atmosphere to mixed ocean layer.  [ GtonsC/Year ]
+C Flux Atm to Ocean = ( ( Equil C in Mixed Layer - C in Mixed Layer) / Mixing Time )
+
+Flux C Atmosphere to Biomass : Carbon flux from atmosphere to biosphere (from primary production),
+including feedbacks from CO2 fertilization. Calculated as sum of the fluxes for all land types.
+[ GtonsC/Year }
+
+Flux C Atmosphere to Biomass  = SUM( Flux C Atmosphere to Biomass u[Land use] )
+>>
+
+<< C_ocean
+
+Diffusion Flux : Diffusion flux between ocean layers.  [ GtonsC/Year ]
+
+Diffusion Flux[layer]  = ( C in layer_p_1 per meter - C in layer_m_1 per meter ) * Eddy diff coeff / Mean Depth of Adjacent Layers[layer1]
+
+C in layer_i per meter [ GtonsC/meter ]
+C in layer per meter  = C in layer / Mixed Depth
+
+Flux Atm to Ocean : Carbon flux from atmosphere to mixed ocean layer.  [ GtonsC/Year ]
+Flux Atm to Ocean = ( Equil C in Mixed Layer  -  C in Mixed Layer ) / Mixing Time 
+
+Equil C in Mixed Layer [ GtonsC ]
+Equilibrium carbon content of mixed layer.
+Determined by the Revelle buffering factor, and by temperature.
+For simplicity, we assume a linear impact of warming on the equilibrium solubility of CO2 in the ocean.
+The user controls the strength of that effect.
+
+Equil C in Mixed Layer = Preind C in Mixed Layer * Effect of Temp on DIC pCO2 * ( C in Atmosphere / Preindustrial C ) ^ (1/Buffer Factor
+ )
+
+Effect of Temp on DIC pCO2 : (dimensionless)
+The fractional reduction in the solubility of CO2 in ocean falls with rising temperatures.
+We assume a linear relationship, likely a good approximation over the typical range for warming by 2100.
+Effect of Temp on DIC pCO2  = 1  -  Sensitivity of pCO2 DIC to Temperature * Temperature change from 1850;
+
+Buffer Factor : Buffer factor for atmosphere/mixed ocean carbon equilibration.  (dimensionless)
+Buffer Factor = Ref Buffer Factor * ( C in Mixed Layer / Preind C in Mixed Layer) ^ Buff C Coeff
+
+Ref Buffer Factor : Normal buffer factor.  (dimensionless)
+Ref Buffer Factor = 9.7
+
+Buffer Factor Init = Ref Buffer Factor; 
+
+Buff C Coeff : Coefficient of CO2 concentration influence on buffer factor.  (dimensionless)
+Buff C Coeff = 3.92
+
+Flux Ocean C to CH4 : Flux of Ocean C to CH4 converted from CH4 per year [ GtonsC/Year ]
+Flux Ocean C to CH4 = Flux Ocean C to CH4 as CH4 / CH4 per C / MtonsC per GtonC
+
+>>
+
+<< CH4 
+
+Global CH4 anthro emissions : [ Mtons/Year ]
+Sum of the anthropogenic CH4 as determined from ratio of RS and the additional CH4 from the leakage of natural gas.
+
+Global CH4 anthro emissions = Total CH4 emissions
+ 
+Total CH4 emissions = SUM( CH4 emissions by emissions source[GHG sources] )  [ Mton / yr ]
+
+Natural CH4 Emissions : Flux of methane from anaerobic respiration in the biosphere, [ Mtons CH4/year ]
+Natural CH4 Emissions = ( Flux Biosphere C to CH4 natural + Flux Ocean C to CH4 ) * CH4 per C * MtonsC per GtonC
+
+Flux Biosphere C to CH4 natural : Carbon flux from biosphere as methane, in GtC/year, arising from anaerobic respiration.
+[ GtonsC/year ]
+Flux Biosphere C to CH4 natural = Total Flux Biomass to CH4 natural + Flux Soil C to CH4
+
+Total Flux Biomass to CH4 natural [ GtonsC/year ]
+Total Flux Biomass to CH4 natural = SUM( Flux Biomass C to CH4 natural u[Land use] )
+
+Flux Ocean C to CH4 : Flux of Ocean C to CH4 converted from CH4 per year [ GtonsC/Year ]
+Flux Ocean C to CH4 = Flux Ocean C to CH4 as CH4 / CH4 per C / MtonsC per GtonC
+
+CH4 Uptake [ Mtons/Year ]
+CH4 Uptake = CH4 in Atm / Time Const for CH4
+
+>>
+
+<< N2O
+
+N2O Uptake = N2O in atm / Time Const for N2O  [ Mton / yr ]
+
+Global N2O Emissions : Sum of anthropogenic and natural N2O emissions.  [ Mton/Year ]
+Global N2O Emissions = Global N2O anthro emissions + Natural N2O emissions 
+
+Total N2O emissions  = SUM( N2O emissions by emissions source[GHG sources] )
+
+Global N2O anthro emissions : [ Mton/Year ]
+Until 2100, anthropogenic N2O emissions follow the normal path set by assumptions and policy scenarios.
+After 2100, they are assumed to change at the same rate as CO2 emissions.
+Global N2O anthro emissions = Total N2O emissions
+
+Total N2O emissions : Name change for the variable that was previously "Global N2O anthro emissions".  [ Mton/Year ]
+Total N2O emissions = SUM( N2O emissions by emissions source[GHG sources])
+
+>>
+
+>>
+
+<< DYNAMIC RELATIONSHIPS (DIFFERENTIAL EQUATIONS) 
+________________________________________________________________________________
+
+Carbon  ...
+d/dt( C ) = 
+	C from CH4 oxidation
+ 	+ 
+	C loss from storage from non land CDR
+ 	+ 
+	Flux C Biomass to Atmosphere
+ 	+ 
+	Flux C Soil to Atmosphere
+ 	+ 
+	Flux C to atm from structure decay
+ 	+ 
+	Global C energy and industry emissions
+ 	- 
+	C removal by non land CDR
+ 	- 
+	Flux Atm to Ocean
+ 	- 
+	Flux C Atmosphere to Biomass
+
+Carbon in Ocean ...
+
+Initial carbon concentration in deep ocean layers from 1990 C-ROADS data.
+
+d/dt ( C_ocean [layer] ) = Diffusion Flux[layer + 1  ] - Diffusion Flux[layer -1 ]  
+
+C in Mixed Layer :  Carbon in mixed layer  [ GtonsC ]
+
+(d/dt) C in Layer 0  = Flux Atm to Ocean -  Diffusion Flux[layer1] - Flux Ocean C to CH4
+
+
+Methane ...
+CH4 in Atmosphere ... [ Mtons ]
+d/dt ( CH4 ) =  Global CH4 anthropomorphic emissions + Natural CH4 Emissions - CH4 Uptake
+
+Nitrous Oxide in Atmosphere ... [ Mtons ]
+d/dt ( N2O in atm ) = Global N2O Emissions - N2O Uptake
+
+Other GHG gasses ... [ Mtons ]
+d/dt( ODS concentration ) = Global ODS emissions - Global ODS uptake 
+
+PFC ... [ Mtons ]
+d/dt (PFC in atm) = Global PFC emissions - PFC uptake
+   
+>>
+
+<< REFERENCES 
+________________________________________________________________________________
+
+https://docs.climateinteractive.org/projects/en-roads-reference-guide/en/latest/pages/climate.html
+
+IPCC AR6. WG1. Table 7.SM.1.
+7.SM.2 Two-layer energy balance model for climate emulation
+Equation 7.SM.2.1
+
+IPCC AR6. WG1. Table 7.SM.1.
+Chapter 7: The Earth's energy budget, climate feedbacks, and climate sensitivity - Supplementary Material
+https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf
+
+IPCC AR6. WG1. Chapter 5.
+Table 5.3 Global N2O budget (units TgN yr)
+averaged over the 1980s, 1990s, 2000s as well as the recent decade starting in 2007.
+
+Effective Radiative Forcing from doubling CO2 concentrations  (ERF) 
+IPCC AR6 7.5.M.1.2
+Table 7.SM.2.
+
+Other forcings from M. Meinshausen, S. Smith et al. (2011) "The RCP GHG concentrations and their extension from 1765 to 2300", DOI 10.1007/s10584-011-0156-z, Climatic Change.
+
+>>
+
+vim600: set foldmethod=marker foldmarker=<<,>> foldlevel=0 foldminlines=2 :

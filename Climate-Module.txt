@@ -1,0 +1,647 @@
+THE EN-ROADS CLIMATE MODULE
+
+<< STATES 
+________________________________________________________________________________
+
+  Qs  : heat in atmosphere and upper ocean    Watt year / meter^2
+
+  Qo  : heat in four deep ocean layers        Watt year / meter^2
+
+	<< STATE INITIAL CONDITIONS
+
+	initial_atmos_uocean_heat  ...  an algebraic equation
+
+	Initial Heat in Ocean layers = 9.5 Watt year / meter^2
+
+	>>
+
+>>
+
+<< INPUTS 
+________________________________________________________________________________
+
+>>
+
+<< OUTPUTS 
+________________________________________________________________________________
+
+Ts : temparature change since 1850 of surface water and atmosphere [ deg C ]
+
+>>
+
+<< CONSTANTS 
+________________________________________________________________________________
+
+100 percent = 100		[ percent ]
+
+unit ppb			1 ppb
+unit ppm			1 ppm
+
+ppt per ppb  = 1000 [ ppt/ppb ]
+
+seconds per year = 3.15569e7  [ sec / year ]  --- not the right number  (!)
+hours per year = 8760 [ hours/year ] --- (!) not the right number (!)
+
+
+g per ton  = 1e+06   [ g/ton ]
+
+kg per Tg : for converting between kg and Tg (e.g., for hydrogen emissions) [ kg H2/Tg H2 ]
+kg per Tg = 1e+09 [ kg / Tg ]
+
+watt per J s = 1                definition of a watt  ... should be watt per (Joule per sec)  ... Watt second / Joule
+MJ per EJ  = 1e+12		[ MJ/EJ ]
+GJ per kWh = 0.0036		[ GJ/kWh ]
+
+ppt per mol  = 5.68e-09 [ ppt/mole ]
+
+
+density = 1000 [ kg / meter^3 ]         density of water
+
+earth_area  = 5.1e14 [ meter^2 ]	       surface area of the Earth
+
+land area fraction = 0.292 [ meter^2 ] fraction of earth that is land
+
+land thickness = 8.4 [ meter ]         effective land area heat capacity, expressed as equivalent water layer thickness
+
+mixed depth  = 100 [ meter ] 		mixed ocean layer depth
+layer depths = 100 , 300, 300 , 1300, 1800 [ meter ]
+
+layer volume = [ earth_area * ( land area fraction * land thickness + (1 - land area fraction) * layer depth(1) ) ; 
+                 area * ( (1 - land area fraction) * layer depth(2:5) ) ] ; 
+
+mass heat cap = 4186 [ J / kg / deg C ] heat capacity per unit mass of water
+
+volumetric_heat_capacity = mass_heat_cap * watt_per_J s / seconds_per_year * density    
+
+initial temp change from 1750 = 0.7 deg C
+Mean temperature change from v 1750 to v 1850 0.05 degC 
+
+
+Radiant Heat Forcing Coeffcients  
+
+CO2
+a1 = -2.4785e-7   W / m^2 / ppm^2
+b1 =  7.5906e-4   W / m^2 / ppm
+c1 = -2.1492e-3   W / m^2 / ppb^(0.5)
+d1 =  5.2488      W / m^2
+C0 =  277.15      ppm
+CO2 threshold	1808		ppm
+
+N2O
+a2 = -3.4197e-4   W / m^2 / ppm
+b2 =  2.5455e-4   W / m^2 / ppb
+c2 = -2.4357e-4   W / m^2 / ppb
+d2 =  0.12173     W / m^2 / ppb^(0.5)
+N0 =  273.87      ppb
+Time Const for N2O 		121		years
+Natural N2O emissions		11.2		 Mton / yr
+
+CH4
+a3 = -8.9603e-5    W / m^2 / ppb
+b3 = -1.2462e-4    W / m^2 / ppb
+d3 = 0.045194      W / m^2 / ppb^(0.5)
+M0 = 731.41        ppb
+CF4 molar mass  = 88 [ g/mole ]
+Time Const for CH4 		10.3		years
+
+PFC
+IPCC AR6. WG1. Table 7.SM.7. https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf.
+Preindustrial PFC conc : PFC concentration in atmosphere prior to 1750
+Preindustrial PFC conc  = 40 [ ppt ]
+PFC radiative efficiency  = 0.099 [ watt/(ppb*meter*meter) ]
+
+SF6
+IPCC AR6. WG1. Table 7.SM.7. https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf
+SF6 molar mass = 146 [ g/mole ]
+Preindustrial SF6 conc : SF6 concentration prior to 1750, assumed zero
+Preindustrial SF6 conc = 0 [ ppt ]
+SF6 radiative efficiency = 0.567 [ watt/(ppb*meter*meter) ]
+
+HFC
+http://www.qc.ec.gc.ca/dpe/publication/enjeux_ges/hfc134a_a.html
+IPCC AR6. WG1. Table 7.SM.7. https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf
+HFC molar mass[HFC type] = 102 , 70 , 52 , 120 , 84 , 66 , 170 , 134 , 252 [ g/mole ]
+Preindustrial HFC conc : Concentration of each HFC in atmosphere pre-1750, assumed zero
+Preindustrial HFC conc = 0 [ ppt ]
+HFC radiative efficiency
+HFC radiative efficiency[HFC type] = 0.167, 0.191, 0.111, 0.234, 0.168, 0.102, 0.237, 0.24, 0.357 [ watt/(ppb*meter*meter) ]
+
+ODS
+Parameters for ODS averaged from AR6 table 7.SM.7 https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf.
+ODS molar mass  = 120 [ g/mole ]
+
+H2
+Sand, M., Skeie, R.B., Sandstad, M. et al. A multi-model assessment of the Global Warming Potential of hydrogen. Commun Earth Environ 4, 203 (2023). https://doi.org/10.1038/s43247-023-00857-8
+H2 storage leakage rate = 2		[ percent/year ]
+Average utilization of storage capacity : On average, storage capacity is utilized approximately 50% over the range of variation from 0 to maximum
+Average utilization of storage capacity  = 0.5
+Energy intensity of hydrogen : https://h2tools.org/hyarc/calculator-tools/hydrogen-heating-values-mass-basis
+Energy intensity of hydrogen = 120 [ MJ/kg H2 ]
+
+CH4       ERF per H2 flux = 0.00046 [ watts/(meter*meter)/(Tg H2/Year) ]
+O3        ERF per H2 flux = 0.00040 [ watts/(meter*meter)/(Tg H2/Year) ]
+Strat H2O ERF per H2 flux = 0.00019 [ watts/(meter*meter)/(Tg H2/Year) ]
+Aerosol    RF per H2 flux = 0 [ watts/(meter*meter)/(Tg H2/Year) ]
+
+
+Reference RTE : Percent round trip efficiency for which the relationship between coverage required and renewables share is determined.
+Reference RTE  = 100
+
+
+Heat Transfer Rate		1.23		watt/(meter*meter)/DegreesC
+
+Heat Diffusion Covar		1		(dimensionless)
+
+Eddy diff coeff index : Index of coefficient for rate at which carbon is mixed in the ocean due to eddy motion, where 1 is equivalent to the expected value of 4400 meter/meter/year.
+Eddy diff coeff index 	= 	1		(dimensionless)
+
+Eddy diff mean : Mean rate of vertical transport at which carbon is mixed in the ocean due to eddy motion.  [ meter*meter/Year ]
+Eddy diff mean 		= 	4400
+
+
+Heat Transfer Coeff : The vertical transport at which heat is mixed in the ocean due to eddy motion. [  watt/(meter*meter)/(DegreesC/meter) ]
+heat_transfer_coefficient = heat_transfer_rate * (layer_depth(i) + layer_depth(i+1)) / 2 * heat_diffusion_covar * ( ( eddy_diff_coeff / eddy_diff_mean) + ( 1 - heat_diffusion_covar ) )
+
+
+
+Rd  : heat capacity of deep ocean
+Rs  : heat capacity of surface water and atmosphere
+tau : heat transfer time constant 
+
+Specific Heat Capacity: Heat Capacity per unit mass   (kg)   ... water ...    4 kJ/kg/degC
+Specific Heat Capacity: Heat Capacity per unit volume (cu.m) ... water ... 4000 kJ/cu.m/degC
+
+lambda : Climate Feedback Parameter  ...  1 < lambda < 6 ... [ W / sq.m / deg C ] 
+
+Climate Sensitivity to 2x CO2   =  3		deg C
+  Equilibrium temperature change in response to a 2xCO2 equivalent change in radiative forcing.
+  According to AR6, high confidence that value likely between 2.5 and 4,
+  with high confidence that extremely unlikely less than 2 and medium confidence
+  that extremely unlikely greater than 5. Changed from AR5, which had 1.5-4.5 outer limits 1-6.
+
+
+   Data from ... 
+   M. Meinshausen, S. Smith et al. 
+   "The RCP GHG concentrations and their extension from 1765 to 2300",
+   Climatic Change. 109(213) (2011)
+   DOI 10.1007/s10584-011-0156-z,
+   https://link.springer.com/article/10.1007/s10584-011-0156-z
+
+=======================================================================
+
+Component weight[Elec Paths,Component]  =	1,1,0,0,0,0,0,0,0;
+
+Capacity adjustment time	8		years
+
+						1,1,0,0,0,0,0,0,0;
+						1,1,0,0,0,0,0,0,0;
+						1,1,0,0,0,0,0,0,0;
+						0,1,1,0,0,0,0,0,0;
+						0,1,0,1,0,0,0,0,0;
+						0,0,0,0,1,0,0,0,0;
+						0,0,0,0,0,1,0,0,0;
+						0,0,0,0,0,0,1,0,0;
+						0,0,0,0,0,0,0,1,0;
+						0,0,0,0,0,0,0,0,1; (dimensionless)
+
+Construction capability adj time	5	 years
+adjusts the time to complete construction to reflect capacitated delays due to the limits of construction materials/resources.
+
+Constr time sensitivity 	 1		dimensionless
+Sensitivity of how much longer construction takes as afunction of loading, where a value of 1 indicates a linear relationship.
+
+Future Plant construction time for electricity [ years ]
+ECoal: 6 , EOil: 4 , EGas: 2 , EBio: 4 , nuclear: 6 , Renewable types: 2 , new: 5 , hydro: 4 
+The number of years between starting to construct the new resource unit until the time that construction is completed; assumes permitting, planning and financing precede construction. Reference and data in the excel file En-ROADS Supporting Data A.
+
+Historic plant construction time for electricity[Elec Paths]  = 6,4,2,4,6,4,2,2,2,2,5 year
+Plant construction times from historic data. Reference and data in the excel file En-ROADS Supporting Data A.
+
+Max exp term			10		dimensionless
+
+Min construction capability	1		(EJ/year)/year
+Min unit revenue  		1		$/GJ
+
+Normal construction utilization 0.7		(dimensionless)
+
+
+Ocean Heat Mixing Time		1 		y
+
+Present year  			2025		year 
+Used to shift from data-driven to policy-driven structure.
+There are many instances of policy start time constants with min and default value
+that must be changed manualy when updating at the end of each year. Search for this value in a text view.
+
+Retirement effect max  		8		dimensionless
+Retirement effect at zero PCCR  1.1		dimensionless
+Retirement effect exponent  	2 		dimensionless
+
+
+SL adjustment time		2		years
+Strat H2O ERF per H2 flux	0.00019		watts/(meter*meter)/(Tg H2/year)
+Supply line recognition		0.5		unitless
+
+TandD costs  			0.02	 $/kWh
+Costs for transmission and distribution per unit generation, assumed constant. Estimated from https://www.eia.gov/todayinenergy/detail.php?id=32812: 2.2 - 3.2 cents/kWh in 2016 Also: https://energy.utexas.edu/sites/default/files/UTAustin_FCe_TDA_2016.pdf: average distribution capital costs approximately 0.6–0.8 ¢/kWh and average distribution system O&M costs approximately 0.4 ¢/kWh; average transmission costs approxiamtely 0.3-0.9 ¢/kWh.
+equations
+
+>>
+
+<< STATIC  RELATIONSHIPS  (ALGEBRAIC EQUATIONS) 
+________________________________________________________________________________
+
+<< Heat in atmosphere and upper oceans ...
+
+	<< initial_atmos_uocean_heat 
+
+ 	atmosphere & upper ocean heat capacity per unit area based on 70% 100m ocean layer and 30% 8.4m equiv land layer [ Watt year / meter^2 ]
+
+	initial_atmos_uocean_heat = initial temp change from 1750 * Atm and Upper Ocean Heat Cap 
+
+	Atm and Upper Ocean Heat Cap = upper layer volume Vu * volumetric heat capacity / earth_area
+
+	>>
+
+	<< Total Radiative Forcing : Total Radiative Forcing from All GHGs plus indirect effects due to H2 [ W / sq.m ]
+
+	Total Radiative Forcing = Well Mixed GHG forcing + Other Forcing + H2 effect on RF 
+
+	RF (En-Roads) = SARF (IPCC) [ W / sq.m ] (constants)
+
+	Stratospheric-temperature-Adjusted Radiative Forcing (SARF) relates greenhouse gas (GHG) concentrations to radiative forcing 
+
+	The IPCC AR 6 has a separate SARF equation for CO2, CH4, N2O, F and ODS
+	Each SARF equation is an empirical function involving empirical coefficients (constants)
+
+	<< well-mixed GHG forcing ... relative to 1750 [ watt / sq.m ]
+
+	well-mixed GHG forcing = RF from CO2 + RF from CH4 + RF from N2O + RF from F gasses + RF from ODS 
+
+	IPCC AR6. WG1. Table 7.SM.1.
+
+	RF from CO2, CH4, N2O ... 
+        depends on various empirical constants and concentrations of CO2 (C), CH4 (M), N2O (N)
+	and corresponding pre-industrial concentrations [ppm] 
+	C : concentration of CO2 ppm ... a STATE
+	N : concentration of N2O ppb ... a STATE
+        M : concentration of CH4 ppb ... a STATE
+
+        C_alpha_max = C0 - b1 / (2*a1)
+
+	alpha_CO2 = d1 - b1^2/(4*a1)                if   C > C_alpha_max
+                  = d1 + a1*(C-CC0)^2 + b1*(C-C0)   if   C0  < C < C_alpha_max
+                  = d1                              if   C < C0
+
+	alpha_N2O = c1*sqrt(N)
+
+        RF_CO2 = (alpha_CO2 + alpha_N2O) * ln(C/C0)
+
+
+	RF_N2O = ( a2*sqrt(C) + b2*sqrt(N) + c2*sqrt(M) )*( sqrt(N) - sqrt(N0) )
+
+	RF_CH4 = ( a3*sqrt(C) + b3*sqrt(N) + d3 )*( sqrt(M) - sqrt(M0) )
+
+
+	Halogenated compounds and other minor GHGs
+	AR 6 Table 7.SM.7
+
+	RF_x = e_x * (X - X0)
+	
+
+	RF from F gasses :  The sum of RF from all F-gases.
+	RF from F gasses  = PFC RF + SF6 RF + HFC RF Total
+
+	PFC RF : Radiative forcing contribution from gases given concentration and gas parameters [ W / m^2 ]
+	PFC RF = ( PFC atm conc - Preindustrial PFC conc) * PFC radiative efficiency 
+
+	PFC atm conc : PFC concentration in atmosphere [ ppt ]
+	PFC atm conc = PFCs in atm * ppt PFC per Tons PFC
+
+	PFCs in atm : ... a STATE
+
+	ppt PFC per Tons PFC : based on CF4 [ ppt/ton ]
+	ppt PFC per Tons PFC = ppt per mol / CF4 molar mass * g per ton 
+
+
+        SF6 RF : Radiative forcing contribution from gases given concentration and gas parameters [ W / m^2 ]
+	SF6 RF = ( SF6 atm conc - Preindustrial SF6 conc ) * SF6 radiative efficiency / ppt per ppb
+
+	SF6 atm conc : Concentration of SF6 in atmosphere [ ppt ] 
+	SF6 atm conc = SF6 in atm * ppt SF6 per Tons SF6
+
+	SF6 in atm : ... a STATE
+
+	ppt SF6 per Tons SF6 : Conversion between amount of gas and global concentration [ ppt/ton ]
+	ppt SF6 per Tons SF6 = ppt per mol / SF6 molar mass * g per ton
+
+	HFC RF Total : The sum of RF from all the HFC types. Relative to 1750 [ watt/(meter*meter) ]
+	HFC RF Total = SUM( HFC RF[HFC type] )
+
+	HFC RF           : Radiative forcing contribution from gases given concentration and gas parameters [ watt/(meter*meter) ]
+	HFC RF[HFC type] = ( HFC atm conc[HFC type] - Preindustrial HFC conc ) * HFC radiative efficiency[HFC type] / ppt per ppb
+
+	HFC atm conc           : Concentration of each HFC in atmosphere [ ppt ]
+	HFC atm conc[HFC type] = HFCs in atm[HFC type] * ppt HFC per Tons HFC[HFC type]
+
+	HFCs in atm : Stock of each HFC in atmosphere ... a STATE
+
+	ppt HFC per Tons HFC           : Conversion between amount of gas and global concentration
+	ppt HFC per Tons HFC[HFC type] = ppt per mol / HFC molar mass[HFC type] * g per ton [ ppt/ton ]
+
+
+
+	ODS radiative forcing : Approximate radiative forcing from aggregate averaged total gases regulated by Montreal Protocol: CFCs, HCFCs etc.  [ watt/(meter*meter) ]
+
+	ODS radiative forcing = ( ODS atm conc - Preindustrial ODS conc) * ODS radiative efficiency / ppt per ppb
+
+
+	ODS atm conc : Atmosphere concentration of aggregated averaged CFCs, HCFCs etc. [ ppt ]
+	ODS atm conc = ODS in atm * ppt ODS per Tons ODS
+
+	ODS in atm : Aggregate stock of CFCs and HCFCs etc regulated by Montreal Protocol ... a STATE [ tons ]
+
+	ppt ODS per Tons ODS : Parameters for ODS averaged AR6 table 7.SM.7 [ ppt/ton ]
+	ppt ODS per Tons ODS = ppt per mol / ODS molar mass * g per ton
+
+	end of "well mixed GHG Forcing"
+        >>
+
+        << Other Forcing = Other Forcings Default (data)
+
+              M. Meinshausen, S. Smith et al. (2011)
+              "The RCP GHG concentrations and their extension from 1765 to 2300",
+              DOI 10.1007/s10584-011-0156-z, Climatic Change.
+
+	Other Forcings Default = -1 + (year - 1990) * ( -0.3 - (-1) ) / (2100 - 1990 )
+
+        >>
+
+	<< H2 effect on RF
+
+	... models the indirect negative climate impacts of Hydrogen fuel 
+
+	No direct RF from H2, but instead RF through indirect effects on CH4, O2, H2O, and aerosols.
+	Sand, M., Skeie, R.B., Sandstad, M. et al.
+	A multi-model assessment of the Global Warming Potential of hydrogen.
+	Commun Earth Environ 4, 203 (2023).
+	https://doi.org/10.1038/s43247-023-00857-8.
+
+	H2 effect on RF = Hydrogen released per year in Tg * ( CH4 ERF per H2 flux + O3 ERF per H2 flux + Strat H2O ERF per H2 flux + Aerosol RF per H2 flux)
+
+	
+	Hydrogen released per year in Tg = Hydrogen for storage lost per year in kg H2 / kg per Tg
+
+	... is this (needlessly ??) complicated  ?? ...
+
+	Hydrogen for storage lost per year in kg H2 : H2 released to atmosphere from storage
+	Hydrogen for storage lost per year in kg H2 = Hydrogen leakage from storage / Energy intensity of hydrogen * MJ per EJ [ kg H2 / yr ]
+
+	Hydrogen leakage from storage [ EJ/year ]
+	Hydrogen leakage from storage = H2 storage leakage rate / "100 percent"
+						* Hydrogen energy storage
+						* Average utilization of storage capacity
+						* Capacity utilization of hydrogen for storage
+
+	H2 storage leakage rate [ percent/year ] : Rate of unused hydrogen that annually leaks from storage ... a CONSTANT
+
+	Hydrogen energy storage : Total hydrogen storage capacity for all durations of coverage requirements [ EJ ]
+	Hydrogen energy storage = Desired Hydrogen        long term energy storage
+				+ Desired Hydrogen      medium term energy storage
+				+ Desired hydrogen       short term energy storage
+				+ Desired hydrogen extra short term energy storage
+
+	Desired Hydrogen long term energy storage = Desired hydrogen long term energy storage coverage / Hours per year * Variable Renewable Capacity
+
+	Desired hydrogen long term energy storage coverage = 
+		MAX( 0, Desired long term storage coverage at RTE 1 -
+			Desired medium term storage coverage at RTE 1 / ( 1 - Percent Storage Req Met by Gen Following Tech / "100 percent") )
+				* Desired fraction of long term storage from hydrogen
+				* Effect of H2 RTE on required storage coverage
+
+	Desired long term storage coverage at RTE 1 [ hours ]
+		The desired extra long term storage coverage is the greater of the total storage coverage and the
+		long term threshold. Demand response cannot reduce this required coverage. Coverage for hydrogen vs
+		non hydrogen account for the effects of RTE.
+
+	Desired long term storage coverage at RTE 1 = Total desired storage coverage at RTE 1 without demand response
+
+	Total desired storage coverage at RTE 1 without demand response : Total storage coverage for hourly, daily, and seasonal requirements if RTE = 1 before accounting for demand response.  [ hours ]
+	Total desired storage coverage at RTE 1 without demand response = 
+		Desired seasonal energy coverage at RTE 1 + Desired daily energy coverage at RTE 1 + Desired hourly energy coverage at RTE 1
+
+	Effect of H2 RTE on required storage coverage :
+	Effect of efficiency use of hydrogen storage on required storage for coverage.
+	Storage coverage required scales as 1/efficiency: the lower the efficiency to use storage, the higher the maximum storage capacity for storage required.
+	Effect of H2 RTE on required storage coverage = 1 / Ratio of H2 RTE use to Ref RTE
+
+	Ratio of H2 RTE use to Ref RTE : The roundtrip efficiency of hydrogen storage divided by the reference roundtrip effciency of 100%.
+	Ratio of H2 RTE use to Ref RTE = Round trip efficiency of hydrogen storage / Reference RTE
+
+	Round trip efficiency of hydrogen storage (RTE of H2)
+	Round trip efficiency of hydrogen storage = "100 percent" - Experience effect on storage efficiency of hydrogen paths *
+						  ( "100 percent" - Round trip efficiency of hydrogen storage before learning )
+
+	Experience effect on storage efficiency of hydrogen paths :
+	The reduction in efficiency losses with experience, accounting for lower limit of reductions and changes in progress ratio from historic to future periods.
+	Experience effect on storage efficiency of hydrogen paths = Lower limit to experience effect on hydrogen efficiency
+ 							+ ( 1 - Lower limit to experience effect on hydrogen efficiency) *
+	SUM( Experience effect on cost of hydrogen[Hydrogen Paths] * Experience effect on cost of hydrogen paths ratio[Hydrogen Paths] * Fraction invested in hydrogen paths for storage[Hydrogen Paths] )
+
+	Round trip efficiency of hydrogen storage before learning (RTE of H2)
+	Round trip efficiency of hydrogen storage before learning = Round trip efficiency of hydrogen storage historical 
+							+ ramp( ( Round trip efficiency of hydrogen storage future - Round trip efficiency of hydrogen storage historical ) / 
+							Shift to future hydrogen RTE phase in time , Future hydrogen RTE start year , Future hydrogen RTE start year + Shift to future hydrogen RTE phase in time )
+ 
+
+	Desired seasonal storage coverage at RTE = 1 [ hours ]
+	Desired seasonal energy coverage at RTE 1 = Seasonal storage capacity LOOKUP( Variable Renewable Share of Capacity ) / Months per year * Hours per year
+
+	Variable Renewable Share of Capacity : Wind and solar capacity fraction of the total electricity capacity.  [ Fraction ]  
+	Variable Renewable Share of Capacity = Variable Renewable Capacity / Total electric carrier supply capacity
+
+	Variable Renewable Capacity : The capacity of wind plus solar, i.e., the renewable sources that vary over time.  Geothermal and other renewables do not require storage.  [ EJ/year ]
+	Variable Renewable Capacity = Elec Energy supply capacity[Wind] + Elec Energy supply capacity[Solar]
+
+	Elec Energy supply capacity : The available capacity of each electric path.  [ EJ/year ] ... ... a STATE 
+
+	Capacity utilization of hydrogen for storage : Fraction of hydrogen production to capacity of hydrogen production.
+	Capacity utilization of hydrogen for storage = ZIDZ( Hydrogen production for storage , Capacity to produce hydrogen for storage )
+
+	Hydrogen production for storage : Capacity to produce hydrogen for storage, as the minimum of the desired and that afforded by the supply chain.  [ EJ/year ]
+	Hydrogen production for storage = MIN( Capacity to produce hydrogen for storage , Desired hydrogen production for storage )
+
+	Capacity to produce hydrogen for storage : Desired hydrogen storage production constrained by capacity to produce hydrogen and to store it.  [ EJ/year ]
+	Capacity to produce hydrogen for storage = SUM( Hydrogen production for energy storage capacity[Hydrogen Paths] )
+
+	Hydrogen production for energy storage capacity : The available storage capacity of each hydrogen path. [ EJ/year ] ... a STATE
+
+	Desired hydrogen production for storage :
+		Hydrogen production to achieve desired hydrogen energy storage is increased by the 1/RTE and the need to replace the leakage.
+		Leakage is the average amount of hydrogen in storage multiplied by the leakage fraction.
+		The average amount of hydrogen in storage is the coverage of hydrogen times the average utilization of the maximum amount that could be in the system.
+		[ EJ/year ]
+
+	Desired hydrogen production for storage = Desired power from hydrogen storage /
+				( Round trip efficiency of hydrogen storage / "100 percent" )
+				* ( 1 + Desired hydrogen energy storage coverage / Hours per year * Average utilization of storage capacity
+					* H2 storage leakage rate / "100 percent" )
+ 
+	Desired power from hydrogen storage : Desired power for all variability that comes from hydrogen [ EJ/year ]
+	Desired power from hydrogen storage = Desired power from storage * Fraction of storage from hydrogen
+
+	Desired power from storage : Desired power for all variability [ EJ/year ]
+	Desired power from storage = Desired seasonal power from storage + Desired daily power from storage + Desired hourly duration power from storage
+
+	Desired seasonal power from storage : Usage of seasonal storage as a function of the per unit value and the variable renewables capacity [ EJ/year ]
+	Desired seasonal power from storage = Required seasonal duration power from storage per unit renewables capacity
+							LOOKUP( Variable Renewable Share of Capacity ) * Variable Renewable Capacity
+
+	Desired daily power from storage : Usage of daily storage as a function of the per unit value and the variable renewables capacity [ EJ/year ]
+	Desired daily power from storage = Required daily duration power from storage per unit renewables capacity 
+							LOOKUP( Variable Renewable Share of Capacity) * Variable Renewable Capacity
+
+	Desired hourly duration power from storage : Usage of hourly storage as a function of the per unit value and the variable renewables capacity [ EJ/year ]
+	Desired hourly duration power from storage = Required hourly duration power from storage per unit renewables capacity
+							LOOKUP( Variable Renewable Share of Capacity) * Variable Renewable Capacity
+
+	Fraction of storage from hydrogen : Fraction of storage that comes from hydrogen.
+	Fraction of storage from hydrogen = ZIDZ( Hydrogen energy storage , Total energy storage )
+
+
+	Total electric carrier supply capacity : Total electric energy capacity. [ EJ/year ]
+	Total electric carrier supply capacity = SUM( Elec Energy supply capacity[Elec Paths] )
+	Elec Energy supply capacity : The available capacity of each electric path.  [ EJ/year ] ... a STATE
+
+
+	Total energy storage : The sum of storage to cover hourly, daily, and seasonal intermittencies.  [ EJ ]
+	Total energy storage =  Desired Hydrogen long term energy storage
+ 				+ 
+				Desired Hydrogen medium term energy storage
+ 				+ 
+				Desired hydrogen short term energy storage
+ 				+ 
+				Desired hydrogen extra short term energy storage
+ 				+ 
+				Non hydrogen long term energy storage
+ 				+ 
+				Non hydrogen medium term energy storage
+ 				+ 
+				Non hydrogen short term energy storage
+ 				+ 
+				Non hydrogen extra short term energy storage
+
+
+        end of H2 effect on RF
+	>>
+
+	end of Total Radiative Forcing
+	>>
+
+	<< Feedback Cooling : Feedback cooling of atmosphere/upper ocean system due to blackbody radiation.  [ watt/meter/meter ]
+
+	Feedback Cooling = Temperature change from 1750 * Climate Feedback Param
+
+	Temperature change from 1750 : Temperature of the Atmosphere and Upper Ocean, relative to 1750 [ DegreesC ]
+	Temperature change from 1750 = Heat in Atmosphere and Upper Ocean / Atm and Upper Ocean Heat Cap
+
+	Heat in Atmosphere and Upper Ocean : Heat in the atmosphere and upper layer of the ocean [ watt*Year/(meter*meter) ] ... a STATE
+
+	Atm and Upper Ocean Heat Cap : Atmosphere & Upper Ocean Heat Capacity per Unit Area Based on 70% 100m ocean layer and 30% 8.4m equiv land layer [ watt*Year/DegreesC/(meter*meter) ]
+	Atm and Upper Ocean Heat Cap = upper layer volume Vu * volumetric heat capacity / earth_area 
+
+	Climate Feedback Param : determines feedback effect from temperature increase.  [ (watt/meter/meter)/DegreesC ]
+	Climate Feedback Param = 2x CO2 Forcing / Climate Sensitivity to 2x CO2
+
+	2x CO2 Forcing = (alpha_CO2 + alpha_N2O) * ln(2)    
+
+	IPCC AR6. WG1. Table 7.SM.1. https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf.
+
+	Climate Sensitivity to 2x CO2 ... an UNCERTAIN constant 
+
+	end of Feedback Cooling
+	>>
+
+end of Heat in atmosphere and upper oceans
+>>
+
+<< Heat in ocean layers ...
+
+heat transfer layers = ( temp(i) - temp(i+1) ) * heat transfer coeff / ( (layer depth(i) + layer_depth(i+1)) / 2 )
+
+temp = heat ./ heat_capacity
+
+heat_capacity = layer_volume * volumetric_heat_capacity / earth_area
+
+heat_transfer_coefficient = heat_transfer_rate * (layer_depth(i) + layer_depth(i+1)) / 2 * heat_diffusion_covar * ( ( eddy_diff_coeff / eddy_diff_mean) + ( 1 - heat_diffusion_covar ) )
+
+%{
+heat transfer upper = ( Temperature change from 1750 - Relative Deep Ocean Temp in upper layer ) * Heat Transfer Coeff / Mean Depth of Adjacent Layers
+
+Temperature change from 1750 : Temperature of the Atmosphere and Upper Ocean, relative to 1750 [ DegreesC ]
+Temperature change from 1750 = Heat in Atmosphere and Upper Ocean / Atm and Upper Ocean Heat Cap
+
+Relative Deep Ocean Temp in upper layer : Temperature of the Deep Ocean [ DegreesC ]
+Relative Deep Ocean Temp in upper layer = heat in deep ocean upper / Deep Ocean Heat Cap upper
+
+Deep Ocean Heat Cap upper : Deep Ocean Heat Capacity per Unit Area [ watt*Year/DegreesC/meter/meter ]
+Deep Ocean Heat Cap upper = upper layer volume Vu * volumetric heat capacity / earth_area
+
+
+
+Mean Depth of Adjacent Layer Upper = ( mixed depth + layer depth upper ) / 2
+
+Eddy diff coeff : Rate of vertical transport at which carbon is mixed in the ocean due to eddy motion.  [ meter*meter/Year ]
+Eddy diff coeff = Eddy diff coeff index * Eddy diff mean
+
+Relative Deep Ocean Temp = Heat in Deep Ocean layer / Deep Ocean Heat Capacity
+
+Heat Transfer from layer 1 of deep ocean to deeper layers   [ W / sq.m ]
+
+Heat Transfer[lower] = ( Relative Deep Ocean Temp[layers] - Relative Deep Ocean Temp[layers] ) * Heat Transfer Coeff / Mean Depth of Adjacent Layers[layers]
+%}
+
+end of Heat in deep ocean upper 
+>>
+
+
+>>
+
+<< DYNAMIC RELATIONSHIPS (DIFFERENTIAL EQUATIONS) 
+________________________________________________________________________________
+
+heat in atmosphere and upper oceans ...
+d/dt( heat in atmosphere and upper ocean ) = total radiative forcing - feedback cooling - heat transfer upper 
+
+heat in four deep ocean layers ...
+d/dt( heat in deep ocean layers ) = heat transfer upper - heat transfer lower
+
+>>
+
+<< REFERENCES 
+________________________________________________________________________________
+
+https://vensim.com/faq/
+
+https://docs.climateinteractive.org/projects/en-roads-reference-guide/en/latest/pages/climate.html
+
+IPCC AR6. WG1. Table 7.SM.1.
+7.SM.2 Two-layer energy balance model for climate emulation
+Equation 7.SM.2.1
+
+IPCC AR6. WG1. Table 7.SM.1.
+Chapter 7: The Earth's energy budget, climate feedbacks, and climate sensitivity - Supplementary Material
+https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_FGD_Chapter07_SM.pdf
+
+IPCC AR6. WG1. Chapter 5.
+Table 5.3 Global N2O budget (units TgN yr)
+averaged over the 1980s, 1990s, 2000s as well as the recent decade starting in 2007.
+
+Effective Radiative Forcing from doubling CO2 concentrations  (ERF) 
+IPCC AR6 7.5.M.1.2
+Table 7.SM.2.
+
+Other forcings from M. Meinshausen, S. Smith et al. (2011) "The RCP GHG concentrations and their extension from 1765 to 2300", DOI 10.1007/s10584-011-0156-z, Climatic Change.
+
+>>
+
+vim600: set foldmethod=marker foldmarker=<<,>> foldlevel=0 foldminlines=2 :
